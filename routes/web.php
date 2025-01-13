@@ -21,8 +21,8 @@ Route::group(['middleware'=>'isAdmin','prefix'=>'admin'],function(){
         Route::get('/companies','index')->name('companies');
         Route::get('/companies/new','create')->name('companies.new');
         Route::get('/companies/edit/{id}','edit')->name('companies.edit');
-        Route::get('/companies/{id}','show')->name('companies.show');
         Route::get('/companies/status/{id}','changStatus')->name('companies.status');
+        Route::get('/companies/{id}','show')->name('companies.show');
 
         Route::post('/companies/store','store')->name('companies.store');
         Route::post('/companies/update/{id}','update')->name('companies.update');
@@ -35,8 +35,8 @@ Route::group(['middleware'=>'isAdmin','prefix'=>'admin'],function(){
         Route::get('/products/destroy/{GTIN}','destroy')->name('products.destroy');
         Route::get('/products/image/{GTIN}','deleteImage')->name('products.image.delete');
         Route::get('/products/{GTIN}','show')->name('products.show');
-        Route::get('/get/json/products.json','GetProductsJSON')->name('products.show');
-        Route::get('/get/json/{GTIN}.json','GetProductJSON')->name('products.show');
+        Route::get('/get/json/products.json','GetProductsJSON');
+        Route::get('/get/json/{GTIN}.json','GetProductJSON');
 
         Route::post('/products/store','store')->name('products.store');
         Route::post('/products/update/{GTIN}','update')->name('products.update');
