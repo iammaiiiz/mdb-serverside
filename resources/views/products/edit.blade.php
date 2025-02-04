@@ -1,6 +1,6 @@
 @extends('layout')
 @section('lang','en')
-@section('title','Create a Product')
+@section('title','Edit a Product')
 @section('content')
     <nav>
         <section>
@@ -13,7 +13,7 @@
     <form action="{{route('products.update',['GTIN'=>$product->GTIN])}}" method="post" enctype="multipart/form-data">
         @csrf
         @include('components.alert')
-        <h1>Create a Product</h1>
+        <h1>Edit a Product</h1>
         <h3>Product</h3>
         <label for="productName">Product Name</label>
         <input type="text" id="productName" value="{{$product->productName}}" name="productName">
@@ -39,6 +39,6 @@
         <input type="text" id="productUnit" value="{{$product->productUnit}}" name="productUnit">
         <label for="productBrandName">Product Email</label>
         <input type="file"name="productImage" id="productImage">
-        <input type="submit" value="Create">
+        <input type="submit" value="Edit">
     </form>
 @endsection

@@ -3,12 +3,12 @@
     margin: 0;
     box-sizing: border-box;
     font-family: serif;
-    user-select: none;
 }
 body{
     width: 100vw;
     min-height: 100vh;
     background: #efefef;
+    overflow-x: hidden;
 }
 .headerWrapper{
     width: 75%;
@@ -31,7 +31,7 @@ body{
     padding: 2rem;
     gap: 1rem;
     form{
-        width: 30%;
+        width: 50%;
         padding: 2rem;
         border-radius: 2rem;
         border: solid 2px black;
@@ -57,20 +57,23 @@ body{
         justify-content: space-between;
         margin: 0.5rem;
     }
-    table{
+    .row{
         width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-        th{
-            font-weight: bold;
-            border: solid 2px #000;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 1vw;
+        .card{
+            width: 100%;
+            border: solid 2px black;
             padding: 1rem;
-        }
-        td{
-            border: solid 2px #000;
-            padding: 1rem;
-            &:last-child{
-                text-align: center;
+            border-radius:1rem;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            .action{
+                margin-top: auto;
+                display: flex;
+                justify-content: space-around;
             }
         }
     }
@@ -90,7 +93,7 @@ a{
         background: #33fa;
     }
     &.sec{
-        background: #333a;
+        background: #000;
     }
     &.warn{
         background: goldenrod;
@@ -104,5 +107,22 @@ a{
     color: #fff;
     ul{
         list-style: none;
+    }
+}
+hr{
+    width: 100%;
+    height: 2px;
+    background: #000;
+}
+table{
+    border-collapse: collapse;
+    width: 80%;
+    th{
+        background: #000;
+        color:#fff;
+    }
+    th,td{
+        border: 1px solid #000;
+        padding: 1rem .5rem; 
     }
 }

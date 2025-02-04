@@ -13,7 +13,7 @@
     <form action="{{route('companies.update',['id'=>$company->companyId])}}" method="post">
         @csrf
         @include('components.alert')
-        <h1>Create a Company</h1>
+        <h1>Edit a Company</h1>
         <h3>Company</h3>
         <label for="companyName">Company Name</label>
         <input type="text" id="companyName" value="{{$company->companyName}}" name="companyName">
@@ -37,6 +37,6 @@
         <input type="text" id="ownerNumber" value="{{$owner->ownerNumber}}" name="ownerNumber">
         <label for="ownerEmail">Owner Email</label>
         <input type="text" id="ownerEmail" value="{{$owner->ownerEmail}}" name="ownerEmail">
-        <input type="submit" value="Create">
+        <input type="submit" value="Edit">
     </form>
 @endsection

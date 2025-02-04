@@ -16,12 +16,12 @@ class ProductController extends Controller
     public function index()
     {
         $showProducts = Product::join('companies as c','c.companyId','=','products.companyId')
-            ->where('c.companyStatus',0)
-            ->where('productStatus',0)
+            ->where('c.companyStatus',1)
+            ->where('productStatus',1)
             ->get();
         $hideProducts = Product::join('companies as c','c.companyId','=','products.companyId')
-            ->where('c.companyStatus',1)
-            ->orWhere('productStatus',1)
+            ->where('c.companyStatus',0)
+            ->orWhere('productStatus',0)
             ->get();
         return view('products.index',compact('showProducts','hideProducts'));
     }
@@ -73,7 +73,7 @@ class ProductController extends Controller
      */
     public function show(string $GTIN)
     {
-        $product = Product::where('GTIN',$GTIN)->where('productStatus',0)->join('companies as c','c.companyId','=','products.companyId')->select('products.*','c.companyName')->firstOrFail();
+        $product = Product::where('GTIN',$GTIN)->where('productStatus',1)->join('companies as c','c.companyId','=','products.companyId')->select('products.*','c.companyName')->firstOrFail();
         return view('products.show',compact('product'));
     }
 
@@ -231,34 +231,27 @@ class ProductController extends Controller
 
     public function bulkGTIN(Request $r){
         $gtins = explode("\r\n",$r->GTIN);
-        $validGTIN = Product::where('productStatus',0)
+        $validGTIN = Product::where('productStatus',1)
             ->whereIn('GTIN',$gtins)
             ->pluck('GTIN')
             ->toArray();
-
         $isAllValid = true;
-        $result = [
-            $gtins->map(function($gtin){
-                if(in_array($gtin,$validGTIN)){
-                    return [
-                        "gtin" => $gtin,
-                        "status" => "Valid"
-                    ];
-                }else{
-                    $isAllValid = false;
-                    return [
-                        "gtin" => $gtin,
-                        "status" => "Invalid"
-                    ];
-                }
-            })
-        ];
-        return redirect()
-            ->back()
-            ->with([
-                "isAllValid" => $isAllValid,
-                "result" => $result
-            ]);
+        $result = [];
+        foreach($gtins as $gtin){
+            if(in_array($gtin,$validGTIN)){
+                $result[] = [
+                    "GTIN" => $gtin,
+                    "status" => "valid"
+                ];
+            }else{
+                $result[] = [
+                    "GTIN" => $gtin,
+                    "status" => "invalid"
+                ];
+                $isAllValid = false;
+            }
+        }
+        return redirect()->back()->with(["result"=>$result,"isAllValid"=>$isAllValid]);
     }
 
 }

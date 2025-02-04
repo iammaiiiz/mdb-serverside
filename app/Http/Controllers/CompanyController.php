@@ -15,8 +15,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $activateCompanies = Company::where('companyStatus',0)->get(); 
-        $deactivateCompanies = Company::where('companyStatus',1)->get();
+        $activateCompanies = Company::where('companyStatus',1)->get(); 
+        $deactivateCompanies = Company::where('companyStatus',0)->get();
         return view('companies.index',compact('activateCompanies','deactivateCompanies'));
     }
     public function changStatus($id){
@@ -74,7 +74,7 @@ class CompanyController extends Controller
         $contact = Contact::where('companyId',$id)->first();
         $owner = Owner::where('companyId',$id)->first();
 
-        $products = Product::where('productStatus',0)->join('companies as c','c.companyId','=','products.companyId')->get();
+        $products = Product::where('productStatus',1)->join('companies as c','c.companyId','=','products.companyId')->get();
         
         return view('companies.show',compact('company','contact','owner','products'));
     }

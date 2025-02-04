@@ -3,16 +3,17 @@
 @section('title','Verify GTIN')
 @section('content')
     <form action="{{route('bulk')}}" method="post">
-        <h1>Fail</h1>
+        <h1>Verify GTIN</h1>
         @csrf
         <label for="GTIN">Bulk GTIN</label>
         <textarea name="GTIN" id="GTIN" rows="10"></textarea>
         <input type="submit" value="Check">
-        @if(Session::has('isAllValid'))
-            @if(Session['isAllValid'] == true)
-                <img src="{{url('public/images/medies/green-tick.png')}}" alt="green tick" width="100" height="100">
+        @if(Session::has("isAllValid"))
+            @if(Session::get("isAllValid") == true)
+                <center><img src="{{url('public/images/medies/green-tick.png')}}" alt="green tick" width="100" height="100"></center>
             @endif
-            <table style="width:40%;">
+            <center>
+            <table>
                 <thead>
                     <tr>
                         <th>GTIN</th>
@@ -20,14 +21,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($result as $item)
+                    @foreach(Session::get("result") as $item)
                         <tr>
-                            <td>{{$item->gtin}}</td>
-                            <td>{{$item->status}}</td>
+                            <td>{{$item["GTIN"]}}</td>
+                            <td>{{$item["status"]}}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </center>
         @endif
     </form>
 @endsection
