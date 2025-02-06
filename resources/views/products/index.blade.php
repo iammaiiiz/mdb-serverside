@@ -8,10 +8,10 @@
             <a href="{{route('products')}}" class="sec">Product</a>
         </section>
         <section>
-            <a href="{{route('products.new')}}" class="success">Craete a Product</a>
+            <a href="{{route('products.new')}}" class="outline-dark">Craete a Product</a>
         </section>
     </nav>
-    <h2>Active Product</h2>
+    <h2>Visible Product</h2>
     <hr>
     @if($showProducts->isNotEmpty())
         <div class="row">
@@ -34,7 +34,7 @@
     @else
         <h3>Visible Product is empty</h3>
     @endif
-    <h2>Deactivate Company</h2>
+    <h2>Hide Product</h2>
     <hr>
     @if($hideProducts->isNotEmpty())
         <div class="row">
@@ -56,6 +56,6 @@
         @endforeach
         </div>
     @else
-        <h3>Visible Product is empty</h3>
+        <h3>Hide Product is empty</h3>
     @endif
 @endsection

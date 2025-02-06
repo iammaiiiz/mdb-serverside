@@ -1,5 +1,5 @@
 @extends('layout')
-@section('lang','en')
+@section('lang',Str::lower($lang))
 @section('title','Show a Product')
 @section('content')
     <nav>

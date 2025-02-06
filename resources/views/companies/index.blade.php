@@ -8,7 +8,7 @@
             <a href="{{route('products')}}" class="sec">Product</a>
         </section>
         <section>
-            <a href="{{route('companies.new')}}" class="success">Craete a Company</a>
+            <a href="{{route('companies.new')}}" class="outline-dark">Craete a Company</a>
         </section>
     </nav>
     <h2>Activate Company</h2>
