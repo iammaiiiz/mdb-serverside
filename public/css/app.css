@@ -98,6 +98,11 @@ a{
     &.warn{
         background: goldenrod;
     }
+    &.text{
+        color: #000;
+        font-weight: bold;
+        font-size: 1.5vw;
+    }
 }
 .alert{
     width: 100%;

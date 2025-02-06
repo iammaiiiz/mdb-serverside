@@ -25,18 +25,18 @@
         <input type="text" id="companyEmail" value="{{$company->companyEmail}}" name="companyEmail">
         <h3>Contact</h3>
         <label for="contactName">Contact Name</label>
-        <input type="text" id="contactName" value="{{$contact->contactName}}" name="contactName">
+        <input type="text" id="contactName" value="{{$company->contact->contactName}}" name="contactName">
         <label for="contactNumber">Contact Number</label>
-        <input type="text" id="contactNumber" value="{{$contact->contactNumber}}" name="contactNumber">
+        <input type="text" id="contactNumber" value="{{$company->contact->contactNumber}}" name="contactNumber">
         <label for="contactEmail">Contact Email</label>
-        <input type="text" id="contactEmail" value="{{$contact->contactEmail}}" name="contactEmail">
+        <input type="text" id="contactEmail" value="{{$company->contact->contactEmail}}" name="contactEmail">
         <h3>Owner</h3>
         <label for="ownerName">Owner Name</label>
-        <input type="text" id="ownerName" value="{{$owner->ownerName}}" name="ownerName">
+        <input type="text" id="ownerName" value="{{$company->owner->ownerName}}" name="ownerName">
         <label for="ownerNumber">Owner Number</label>
-        <input type="text" id="ownerNumber" value="{{$owner->ownerNumber}}" name="ownerNumber">
+        <input type="text" id="ownerNumber" value="{{$company->owner->ownerNumber}}" name="ownerNumber">
         <label for="ownerEmail">Owner Email</label>
-        <input type="text" id="ownerEmail" value="{{$owner->ownerEmail}}" name="ownerEmail">
+        <input type="text" id="ownerEmail" value="{{$company->owner->ownerEmail}}" name="ownerEmail">
         <input type="submit" value="Edit">
     </form>
 @endsection

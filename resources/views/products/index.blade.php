@@ -11,7 +11,7 @@
             <a href="{{route('products.new')}}" class="success">Craete a Product</a>
         </section>
     </nav>
-    <h2>Visible Product</h2>
+    <h2>Active Product</h2>
     <hr>
     @if($showProducts->isNotEmpty())
         <div class="row">
@@ -22,8 +22,8 @@
             <div class="card">
                 <h4>#{{++$showProductIndex}} | {{$showProduct->GTIN}}</h4>
                 <hr>
-                <h4>Name : {{$showProduct->productName}}</h4>
-                <section><strong>Description :</strong> {{$showProduct->productDescription}}</section>
+                <section><strong>English Name :</strong> {{$showProduct->productNameEnglish}}</section>
+                <section><strong>English Description :</strong> {{$showProduct->productDescriptionEnglish}}</section>
                 <div class="action">
                     <a href="{{route('products.status',['GTIN'=>$showProduct->GTIN])}}" class="warn">Hide</a>
                     <a href="{{route('products.show',['GTIN'=>$showProduct->GTIN])}}" class="info">View</a>
@@ -45,12 +45,12 @@
             <div class="card">
                 <h4>#{{++$hideProductIndex}} | {{$hideProduct->GTIN}}</h4>
                 <hr>
-                <h4>Name : {{$hideProduct->productName}}</h4>
-                <section><strong>Description :</strong> {{$hideProduct->productDescription}}</section>
+                <section><strong>English Name :</strong> {{$hideProduct->productNameEnglish}}</section>
+                <section><strong>English Description :</strong> {{$hideProduct->productDescriptionEnglish}}</section>
                 <div class="action">
                     <a href="{{route('products.status',['GTIN'=>$hideProduct->GTIN])}}" class="warn">Show</a>
                     <a href="{{route('products.show',['GTIN'=>$hideProduct->GTIN])}}" class="info">View</a>
-                    <a href="{{route('products.destroy',['GTIN'=>$hideProduct->GTIN])}}" class="danger" onclick="return confirm('Are you sure to delete {{$hideProduct->productName}}')">Delete</a>
+                    <a href="{{route('products.destroy',['GTIN'=>$hideProduct->GTIN])}}" class="danger" onclick="return confirm('Are you sure to delete {{$hideProduct->GTIN}}')">Delete</a>
                 </div>
             </div>
         @endforeach

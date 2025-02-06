@@ -15,18 +15,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $showProducts = Product::join('companies as c','c.companyId','=','products.companyId')
-            ->where('c.companyStatus',1)
+        $showProducts = Product::whereHas('company',fn($q)=>$q->where('companyStatus',1))
             ->where('productStatus',1)
             ->get();
-        $hideProducts = Product::join('companies as c','c.companyId','=','products.companyId')
-            ->where('c.companyStatus',0)
+        $hideProducts = Product::whereHas('company',fn($q)=>$q->where('companyStatus',0))
             ->orWhere('productStatus',0)
             ->get();
         return view('products.index',compact('showProducts','hideProducts'));
     }
+    // chang product status
     public function changStatus($GTIN){
-        $product = product::where('GTIN',$GTIN)->firstOrFail();
+        $product = product::findOrFail($GTIN);
         $product['productStatus'] = !$product['productStatus'];
         $product->save();
         return redirect()->back();
@@ -37,7 +36,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $companies = Company::select('companies.companyId as cId','companies.companyName as cName')->get();
+        $companies = Company::get();
         return view('products.create',compact('companies'));
     }
 
@@ -47,17 +46,22 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'productName' => 'required',
+            'productNameEnglish' => 'required',
+            'productNameFrance' => 'required',
+            'productDescriptionEnglish' => 'required',
+            'productDescriptionFrance' => 'required',
             'GTIN' => 'required|numeric|digits_between:13,14|unique:products,GTIN',
-            'productDescription' => 'required',
             'productBrandName' => 'required',
             'productCountryOfOrigin' => 'required',
             'productGross' => 'required',
             'productNet' => 'required',
             'productUnit' => 'required',
             'companyId' => 'required',
+            'productImage' => 'image|mimes:png,jpg,jpeg,svg,gif'
         ]);
+
         $validated['productImage'] = null;
+        
         if($request->hasFile('productImage')){
             $image = $request->file('productImage');
             $imageName = $request->GTIN.'.'.$image->extension();
@@ -71,11 +75,18 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $GTIN)
-    {
-        $product = Product::where('GTIN',$GTIN)->where('productStatus',1)->join('companies as c','c.companyId','=','products.companyId')->select('products.*','c.companyName')->firstOrFail();
-        return view('products.show',compact('product'));
-    }
+        public function show(string $GTIN,Request $r)
+        {
+            $lang = $r->query('lang') ?? "EN";
+            $product = Product::with('company')->findOrFail($GTIN);
+            return view('products.show',compact('product','lang'));
+        }
+        public function showPublic(string $GTIN,Request $r)
+        {
+            $lang = $r->query('lang') ?? "EN";
+            $product = Product::where('productStatus',1)->with('company')->findOrFail($GTIN);
+            return view('products.show',compact('product','lang'));
+        }
 
     /**
      * Show the form for editing the specified resource.
@@ -83,7 +94,7 @@ class ProductController extends Controller
     public function edit(string $GTIN)
     {
         $product = Product::where('GTIN',$GTIN)->firstOrFail();
-        $companies = Company::select('companies.companyId as cId','companies.companyName as cName')->get();
+        $companies = Company::all();
         return view('products.edit',compact('product','companies'));
     }
 
@@ -94,15 +105,18 @@ class ProductController extends Controller
     {
         $product = Product::where('GTIN',$GTIN)->firstOrFail();
         $validated = $request->validate([
-            'productName' => 'required',
+            'productNameEnglish' => 'required',
+            'productNameFrance' => 'required',
+            'productDescriptionEnglish' => 'required',
+            'productDescriptionFrance' => 'required',
             'GTIN' => 'required|numeric|digits_between:13,14|unique:products,GTIN,'.$product->productId.',productId',
-            'productDescription' => 'required',
             'productBrandName' => 'required',
             'productCountryOfOrigin' => 'required',
             'productGross' => 'numeric',
             'productNet' => 'numeric',
             'productUnit' => 'required',
             'companyId' => 'required',
+            'productImage' => 'image|mimes:png,jpg,jpeg,svg,gif'
         ]);
         if($request->hasFile('productImage')){
             $image = $request->file('productImage');
@@ -123,9 +137,9 @@ class ProductController extends Controller
         return redirect()->back();
     }
     public function deleteImage($GTIN){
-        $product = product::where('GTIN',$GTIN)->firstOrFail();
-        // $imgName = $product->productImage;
-        // if(file_exists($imageName)) unlink($imgName);
+        $product = Product::where('GTIN',$GTIN)->firstOrFail();
+        $imgName = $product->productImage;
+        if(file_exists($imgName)) unlink($imgName);
         $product['productImage'] = null;
         $product->save();
         return redirect()->back();
@@ -135,19 +149,25 @@ class ProductController extends Controller
         $keyword = $r->query('query');
         $query = Product::query();
         if($keyword){
-            $query->where('productName','like','%'.$keyword.'%')
-                ->orWhere('productDescription','like','%'.$keyword.'%');
+            $query->orWhere('productNameEnglish','like','%'.$keyword.'%')
+                ->orWhere('productNameFrance','like','%'.$keyword.'%')
+                ->orWhere('productDescriptionEnglish','like','%'.$keyword.'%')
+                ->orWhere('productDescriptionFrance','like','%'.$keyword.'%');
         }
-        $products = $query->join('companies as c','c.companyId','=','products.companyId')
-                    ->join('contacts as ct','ct.companyId','=','products.companyId')
-                    ->join('owners as o','o.companyId','=','products.companyId')
+        $products = $query->whereHas('company',fn($q)=>$q->with(['contact','owner']))
                     ->paginate(10);
         $respond = [
             "data" => [
                 $products->map(function($product){
                     return [
-                        "name" => $product->productName, 
-                        "description" => $product->productDescription, 
+                        "name" => [
+                            "en" => $product->productNameEnglish,
+                            "fr" => $product->productNameFrance
+                        ],
+                        "description" => [
+                            "en" => $product->productDescriptionEnglish,
+                            "fr" => $product->productDescriptionFrance
+                        ],
                         "gtin" => $product->GTIN, 
                         "brand" => $product->productBrandName, 
                         "countryOfOrigin" => $product->productCountryOfOrigin, 
@@ -157,21 +177,21 @@ class ProductController extends Controller
                             "unit" => $product->productUnit 
                         ], 
                         "company" => [ 
-                            "companyName" => $product->companyName, 
-                            "companyAddress" => $product->companyAddress, 
-                            "companyTelephone" => $product->companyTelephone, 
-                            "companyEmail" => $product->companyEmail, 
+                            "companyName" => ($product->company)->companyName, 
+                            "companyAddress" => ($product->company)->companyAddress, 
+                            "companyTelephone" => ($product->company)->companyTelephone, 
+                            "companyEmail" => ($product->company)->companyEmail, 
                             "owner" => [ 
-                                "name" => $product->ownerName, 
-                                "mobileNumber" => $product->ownerNumber, 
-                                "email" => $product-> ownerEmail
+                                "name" => ($product->company->owner)->ownerName, 
+                                "mobileNumber" => ($product->company->owner)->ownerNumber, 
+                                "email" => ($product->company->owner)-> ownerEmail
                             ], 
                             "contact" => [ 
-                                "name" => $product->contactName, 
-                                "mobileNumber" => $product->contactNumber, 
-                                "email" => $product->contactEmail
+                                "name" => ($product->company->contact)->contactName, 
+                                "mobileNumber" => ($product->company->contact)->contactNumber, 
+                                "email" => ($product->company->contact)->contactEmail
                             ]
-                        ]
+                            ]
                     ];
                 })
             ],
@@ -184,19 +204,22 @@ class ProductController extends Controller
             
             ]
             ];
-            return $respond;
+            return response()->json($respond,200);
     }
 
     public function GetProductJSON($GTIN){
-        $product = Product::where('GTIN',$GTIN)
-        ->join('companies as c','c.companyId','=','products.companyId')
-        ->join('contacts as ct','ct.companyId','=','products.companyId')
-        ->join('owners as o','o.companyId','=','products.companyId')
-        ->firstOrFail();
+        $product = Product::whereHas('company',fn($q)=>q->with('contact','owner'))
+            ->findOrFail($GTIN);
 
         $respond = [
-            "name" => $product->productName, 
-            "description" => $product->productDescription, 
+            "name" => [
+                "en" => $product->productNameEnglish,
+                "fr" => $product->productNameFrance
+            ],
+            "description" => [
+                "en" => $product->productDescriptionEnglish,
+                "fr" => $product->productDescriptionFrance
+            ],
             "gtin" => $product->GTIN, 
             "brand" => $product->productBrandName, 
             "countryOfOrigin" => $product->productCountryOfOrigin, 
@@ -206,23 +229,23 @@ class ProductController extends Controller
                 "unit" => $product->productUnit 
             ], 
             "company" => [ 
-                "companyName" => $product->companyName, 
-                "companyAddress" => $product->companyAddress, 
-                "companyTelephone" => $product->companyTelephone, 
-                "companyEmail" => $product->companyEmail, 
+                "companyName" => ($product->company)->companyName, 
+                "companyAddress" => ($product->company)->companyAddress, 
+                "companyTelephone" => ($product->company)->companyTelephone, 
+                "companyEmail" => ($product->company)->companyEmail, 
                 "owner" => [ 
-                    "name" => $product->ownerName, 
-                    "mobileNumber" => $product->ownerNumber, 
-                    "email" => $product-> ownerEmail
+                    "name" => ($product->company->owner)->ownerName, 
+                    "mobileNumber" => ($product->company->owner)->ownerNumber, 
+                    "email" => ($product->company->owner)-> ownerEmail
                 ], 
                 "contact" => [ 
-                    "name" => $product->contactName, 
-                    "mobileNumber" => $product->contactNumber, 
-                    "email" => $product->contactEmail
+                    "name" => ($product->company->contact)->contactName, 
+                    "mobileNumber" => ($product->company->contact)->contactNumber, 
+                    "email" => ($product->company->contact)->contactEmail
                 ]
             ]
         ];
-        return $respond;
+        return response()->json($respond,200);
     }
 
     public function verifyGTIN(){

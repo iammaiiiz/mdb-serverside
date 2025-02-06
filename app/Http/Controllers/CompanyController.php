@@ -19,6 +19,7 @@ class CompanyController extends Controller
         $deactivateCompanies = Company::where('companyStatus',0)->get();
         return view('companies.index',compact('activateCompanies','deactivateCompanies'));
     }
+    // change company status
     public function changStatus($id){
         $company = Company::findOrFail($id);
         $company['companyStatus'] = !$company['companyStatus'];
@@ -42,23 +43,23 @@ class CompanyController extends Controller
         $validated = $request->validate([
             'companyName' => 'required',
             'companyAddress' => 'required',
-            'companyTelephone' => 'required',
+            'companyTelephone' => 'required|numeric',
             'companyEmail' => 'required',
             'contactName' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|numeric',
             'contactEmail' => 'required',
             'ownerName' => 'required',
-            'ownerNumber' => 'required',
+            'ownerNumber' => 'required|numeric',
             'ownerEmail' => 'required',
         ]);
         $company = $request->only(['companyName','companyAddress','companyTelephone','companyEmail']);
         $companyCreated = Company::create($company);
         $companyId = $companyCreated->companyId;
-        $contact = $request->only(['contactName','contactNumber','contactEmail','companyId']);
+        $contact = $request->only(['contactName','contactNumber','contactEmail']);
         $contact['companyId'] = $companyId;
         Contact::create($contact);
 
-        $owner = $request->only(['ownerName','ownerNumber','ownerEmail','companyId']);
+        $owner = $request->only(['ownerName','ownerNumber','ownerEmail']);
         $owner['companyId'] = $companyId;
         Owner::create($owner);
 
@@ -70,13 +71,8 @@ class CompanyController extends Controller
      */
     public function show(string $id)
     {
-        $company = Company::findorFail($id);
-        $contact = Contact::where('companyId',$id)->first();
-        $owner = Owner::where('companyId',$id)->first();
-
-        $products = Product::where('productStatus',1)->join('companies as c','c.companyId','=','products.companyId')->get();
-        
-        return view('companies.show',compact('company','contact','owner','products'));
+        $company = Company::with(['contact','owner','product'])->findOrFail($id);
+        return view('companies.show',compact('company'));
     }
 
     /**
@@ -84,10 +80,8 @@ class CompanyController extends Controller
      */
     public function edit(string $id)
     {
-        $company = Company::findOrFail($id);
-        $contact = Contact::where('companyId',$id)->first();
-        $owner = Owner::where('companyId',$id)->first();
-        return view('companies.edit',compact('company','contact','owner'));
+        $company = Company::with(['contact','owner'])->findOrFail($id);
+        return view('companies.edit',compact('company'));
     }
 
     /**
@@ -98,23 +92,23 @@ class CompanyController extends Controller
         $validated = $request->validate([
             'companyName' => 'required',
             'companyAddress' => 'required',
-            'companyTelephone' => 'required',
+            'companyTelephone' => 'required|numeric',
             'companyEmail' => 'required',
             'contactName' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|numeric',
             'contactEmail' => 'required',
             'ownerName' => 'required',
-            'ownerNumber' => 'required',
+            'ownerNumber' => 'required|numeric',
             'ownerEmail' => 'required',
         ]);
         $company = $request->only(['companyName','companyAddress','companyTelephone','companyEmail']);
         $companyUpdated = Company::findOrFail($id)->update($company);
 
-        $contact = $request->only(['contactName','contactNumber','contactEmail','companyId']);
+        $contact = $request->only(['contactName','contactNumber','contactEmail']);
         $contact['companyId'] = $id;
         Contact::where('companyId',$id)->update($contact);
 
-        $owner = $request->only(['ownerName','ownerNumber','ownerEmail','companyId']);
+        $owner = $request->only(['ownerName','ownerNumber','ownerEmail']);
         $owner['companyId'] = $id;
         Owner::where('companyId',$id)->update($owner);
 

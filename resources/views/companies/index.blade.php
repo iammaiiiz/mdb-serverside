@@ -44,7 +44,7 @@
         @endphp
         @foreach($deactivateCompanies as $deactivateCompany)
         <div class="card">
-            <h4>#{{++$deactivateIndex}} | Active</h4>
+            <h4>#{{++$deactivateIndex}} | {{$deactivateCompany->companyName}}</h4>
             <hr>
             <section><strong>Address :</strong> {{$deactivateCompany->companyAddress}}</section>
             <section><strong>Telephone :</strong> {{$deactivateCompany->companyTelephone}}</section>

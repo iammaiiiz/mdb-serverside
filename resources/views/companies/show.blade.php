@@ -13,22 +13,22 @@
     </nav>
     <br><br>
     <h1>Company Info</h1>
-    <h3>{{$company->companyName}}</h3>
-    <h3>{{$company->companyAddress}}</h3>
-    <h3>{{$company->companyTelephone}}</h3>
-    <h3>{{$company->companyEmail}}</h3>
+    <h3>Name : {{$company->companyName}}</h3>
+    <h3>Address : {{$company->companyAddress}}</h3>
+    <h3>Telephon : {{$company->companyTelephone}}</h3>
+    <h3>Email : {{$company->companyEmail}}</h3>
 
     <br>
 
     <h2>Contact Info</h2>
-    <h4>{{$contact->contactName}}</h4>
-    <h4>{{$contact->contactNumber}}</h4>
-    <h4>{{$contact->contactEmail}}</h4>
+    <h4>Name : {{$company->contact->contactName}}</h4>
+    <h4>Telephon : {{$company->contact->contactNumber}}</h4>
+    <h4>Email : {{$company->contact->contactEmail}}</h4>
     <br>
     <h2>Owner Info</h2>
-    <h4>{{$owner->ownerName}}</h4>
-    <h4>{{$owner->ownerNumber}}</h4>
-    <h4>{{$owner->ownerEmail}}</h4>
+    <h4>Name : {{$company->owner->ownerName}}</h4>
+    <h4>Telephon : {{$company->owner->ownerNumber}}</h4>
+    <h4>Email : {{$company->owner->ownerEmail}}</h4>
     <br>
     <h2>All Products</h2>
     <table>
@@ -40,12 +40,12 @@
             </tr>
         </thead>
         <tbody>
-            @if($products->isNotEmpty())
-                @foreach($products as $product)
+            @if(($company->product)->isNotEmpty())
+                @foreach($company->product as $product)
                 <tr>
                     <td>{{ Str::limit($product->GTIN ,25) }}</td>
-                    <td>{{ Str::limit($product->productName,25) }}</td>
-                    <td>{{ Str::limit($product->productDescription,50) }}</td>
+                    <td>{{ Str::limit($product->productNameEnglish,25) }}</td>
+                    <td>{{ Str::limit($product->productDescriptionEnglish,50) }}</td>
                 </tr>
                 @endforeach
             @else

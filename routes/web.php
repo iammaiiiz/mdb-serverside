@@ -35,8 +35,8 @@ Route::group(['middleware'=>'isAdmin','prefix'=>'admin'],function(){
         Route::get('/products/destroy/{GTIN}','destroy')->name('products.destroy');
         Route::get('/products/image/{GTIN}','deleteImage')->name('products.image.delete');
         Route::get('/products/{GTIN}','show')->name('products.show');
-        Route::get('/json/products.json','ProductsJSON');
-        Route::get('/json/{GTIN}.json','ProductJSON');
+        Route::get('/json/products.json','GetProductsJSON');
+        Route::get('/json/{GTIN}.json','GetProductJSON');
 
         Route::post('/products/store','store')->name('products.store');
         Route::post('/products/update/{GTIN}','update')->name('products.update');
@@ -50,7 +50,7 @@ Route::controller(UserController::class)->group(function(){
     Route::post('/login','login')->name('login');
 });
 Route::controller(ProductController::class)->group(function(){
-    Route::get('/products/{GTIN}','show');
+    Route::get('/products/{GTIN}','showPublic')->name('public.product.show');
     Route::get('/GTIN/verify','verifyGTIN');
     Route::post('/GTIN/bulk','bulkGTIN')->name('bulk');
 });

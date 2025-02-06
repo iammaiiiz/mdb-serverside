@@ -11,4 +11,9 @@ class Owner extends Model
     protected $fillable = ['ownerName','ownerNumber','ownerEmail','companyId'];
     protected $primaryKey = 'ownerId';
     public $timestamps = false;
+    function Company(){
+        function Company(){
+            return $this->belongsTo(Company::class,'companyId');
+        }
+    }
 }

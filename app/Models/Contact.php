@@ -11,4 +11,9 @@ class Contact extends Model
     protected $fillable = ['contactName','contactNumber','contactEmail','companyId'];
     protected $primaryKey = 'contactId';
     public $timestamps = false;
+    function Company(){
+        function Company(){
+            return $this->belongsTo(Company::class,'companyId');
+        }
+    }
 }

@@ -15,16 +15,20 @@
         @include('components.alert')
         <h1>Edit a Product</h1>
         <h3>Product</h3>
-        <label for="productName">Product Name</label>
-        <input type="text" id="productName" value="{{$product->productName}}" name="productName">
+        <label for="productNameEnglish">Product Name</label>
+        <input type="text" id="productNameEnglish" value="{{$product->productNameEnglish}}" name="productNameEnglish">
+        <label for="productNameFrance">Product Name</label>
+        <input type="text" id="productNameFrance" value="{{$product->productNameFrance}}" name="productNameFrance">
+        <label for="productDescriptionEnglish">Product Description</label>
+        <textarea name="productDescriptionEnglish" id="productDescriptionEnglish" width="100%" rows="7">{{$product->productDescriptionEnglish}}</textarea>
+        <label for="productDescriptionFrance">Product Description</label>
+        <textarea name="productDescriptionFrance" id="productDescriptionFrance" width="100%" rows="7">{{$product->productDescriptionFrance}}</textarea>
         <label for="GTIN">Product GTIN</label>
         <input type="text" id="GTIN" value="{{$product->GTIN}}" name="GTIN">
-        <label for="productDescription">Product Description</label>
-        <textarea name="productDescription" id="productDescription" width="100%" rows="7">{{$product->productDescription}}</textarea>
         <label for="companyId">Company</label>
         <select name="companyId" id="companyId">
             @foreach($companies as $company)
-                <option value="{{$company->cId}}">{{$company->cName}}</option>
+                <option value="{{$company->companyId}}">{{$company->companyName}}</option>
             @endforeach
         </select>
         <label for="productBrandName">Product Brand Name</label>
