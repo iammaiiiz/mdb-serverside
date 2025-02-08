@@ -4,8 +4,8 @@
 @section('content')
     <nav>
         <section>
-            <a href="{{route('companies')}}" class="sec">Company</a>
-            <a href="{{route('products')}}" class="sec">Product</a>
+            <a href="{{route('companies')}}" class="dark">Company</a>
+            <a href="{{route('products')}}" class="dark">Product</a>
         </section>
         <section>
             <a href="{{route('companies.new')}}" class="outline-dark">Craete a Company</a>

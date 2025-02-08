@@ -4,7 +4,7 @@
 @section('content')
     <nav>
         <section>
-            <a href="{{route('companies')}}" class="sec">Back</a>
+            <a href="{{route('companies')}}" class="dark">Back</a>
         </section>
 
         <section>

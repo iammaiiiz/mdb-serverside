@@ -53,8 +53,8 @@ class ProductController extends Controller
             'GTIN' => 'required|numeric|digits_between:13,14|unique:products,GTIN',
             'productBrandName' => 'required',
             'productCountryOfOrigin' => 'required',
-            'productGross' => 'required',
-            'productNet' => 'required',
+            'productGross' => 'required|numeric',
+            'productNet' => 'required|numeric',
             'productUnit' => 'required',
             'companyId' => 'required',
             'productImage' => 'image|mimes:png,jpg,jpeg,svg,gif'
@@ -109,11 +109,11 @@ class ProductController extends Controller
             'productNameFrance' => 'required',
             'productDescriptionEnglish' => 'required',
             'productDescriptionFrance' => 'required',
-            'GTIN' => 'required|numeric|digits_between:13,14|unique:products,GTIN,'.$product->productId.',productId',
+            'GTIN' => 'required|numeric|digits_between:13,14|unique:products,GTIN,'.$product->GTIN.',GTIN',
             'productBrandName' => 'required',
             'productCountryOfOrigin' => 'required',
-            'productGross' => 'numeric',
-            'productNet' => 'numeric',
+            'productGross' => 'required|numeric',
+            'productNet' => 'required|numeric',
             'productUnit' => 'required',
             'companyId' => 'required',
             'productImage' => 'image|mimes:png,jpg,jpeg,svg,gif'
@@ -125,7 +125,7 @@ class ProductController extends Controller
             $validated['productImage'] = $imageName;
         }
         $product->update($validated);
-        return redirect()->route('products.show',['GTIN'=>$GTIN]);
+        return redirect()->route('products.show',['GTIN'=>$validated['GTIN']]);
     }
 
     /**
@@ -154,8 +154,7 @@ class ProductController extends Controller
                 ->orWhere('productDescriptionEnglish','like','%'.$keyword.'%')
                 ->orWhere('productDescriptionFrance','like','%'.$keyword.'%');
         }
-        $products = $query->whereHas('company',fn($q)=>$q->with(['contact','owner']))
-                    ->paginate(10);
+        $products = $query->whereHas('company',fn($q)=>$q->with(['contact','owner']))->paginate(10);
         $respond = [
             "data" => [
                 $products->map(function($product){
@@ -208,8 +207,7 @@ class ProductController extends Controller
     }
 
     public function GetProductJSON($GTIN){
-        $product = Product::whereHas('company',fn($q)=>q->with('contact','owner'))
-            ->findOrFail($GTIN);
+        $product = Product::whereHas('company',fn($q)=>q->with('contact','owner'))->findOrFail($GTIN);
 
         $respond = [
             "name" => [
@@ -252,7 +250,7 @@ class ProductController extends Controller
         return view('verifyGTIN');
     }
 
-    public function bulkGTIN(Request $r){
+    public function checkGTIN(Request $r){
         $gtins = explode("\r\n",$r->GTIN);
         $validGTIN = Product::where('productStatus',1)
             ->whereIn('GTIN',$gtins)

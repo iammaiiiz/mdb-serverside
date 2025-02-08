@@ -5,7 +5,7 @@
     <nav>
     @if(Session::has('isAdmin'))
         <section>
-            <a href="{{route('products')}}" class="sec">Back</a>
+            <a href="{{route('products')}}" class="dark">Back</a>
         </section>
 
         <section>

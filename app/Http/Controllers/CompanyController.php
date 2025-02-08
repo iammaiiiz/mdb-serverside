@@ -55,6 +55,7 @@ class CompanyController extends Controller
         $company = $request->only(['companyName','companyAddress','companyTelephone','companyEmail']);
         $companyCreated = Company::create($company);
         $companyId = $companyCreated->companyId;
+
         $contact = $request->only(['contactName','contactNumber','contactEmail']);
         $contact['companyId'] = $companyId;
         Contact::create($contact);

@@ -10,13 +10,13 @@ body{
     background: #efefef;
     overflow-x: hidden;
 }
-.headerWrapper{
+header{
     width: 75%;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
+    padding-block: 1rem;
 }
 .container{
     width: 75%;
@@ -73,7 +73,11 @@ body{
             .action{
                 margin-top: auto;
                 display: flex;
-                justify-content: space-around;
+                gap: 1rem;
+                a{
+                    flex: 1;
+                    text-align: center;
+                }
             }
         }
     }
@@ -87,6 +91,11 @@ a{
         background: #fff;
         color: #000;
         border: solid 2px black;
+        transition: all ease-in-out .25s;
+        &:hover{
+            background: #000;
+            color: #fff;
+        }
     }
     &.danger{
         background: #f33a;
@@ -97,7 +106,7 @@ a{
     &.info{
         background: #33fa;
     }
-    &.sec{
+    &.dark{
         background: #000;
     }
     &.warn{

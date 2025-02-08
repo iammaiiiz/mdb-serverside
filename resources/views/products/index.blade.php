@@ -4,8 +4,10 @@
 @section('content')
     <nav>
         <section>
-            <a href="{{route('companies')}}" class="sec">Company</a>
-            <a href="{{route('products')}}" class="sec">Product</a>
+            <a href="{{route('companies')}}" class="dark">Company</a>
+            <a href="{{route('products')}}" class="dark">Product</a>
+            <a href="{{route('GetProductsJSON')}}" class="dark">Products JSON</a>
+            <a href="{{route('verify.GTIN')}}" class="dark">Verify GTIN</a>
         </section>
         <section>
             <a href="{{route('products.new')}}" class="outline-dark">Craete a Product</a>

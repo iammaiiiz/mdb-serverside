@@ -2,9 +2,9 @@
 @section('lang','en')
 @section('title','Verify GTIN')
 @section('content')
-    <form action="{{route('bulk')}}" method="post">
-        <h1>Verify GTIN</h1>
+    <form action="{{route('check.GTIN')}}" method="post">
         @csrf
+        <h1>Verify GTIN</h1>
         <label for="GTIN">Bulk GTIN</label>
         <textarea name="GTIN" id="GTIN" rows="10"></textarea>
         <input type="submit" value="Check">

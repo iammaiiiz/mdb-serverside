@@ -8,12 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     use HasFactory;
-    protected $fillable = ['contactName','contactNumber','contactEmail','companyId'];
+    protected $guarded = [];
     protected $primaryKey = 'contactId';
     public $timestamps = false;
     function Company(){
-        function Company(){
-            return $this->belongsTo(Company::class,'companyId');
-        }
+        return $this->belongsTo(Company::class,'companyId');
     }
 }

@@ -8,12 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
     use HasFactory;
-    protected $fillable = ['companyName','companyAddress','companyTelephone','companyEmail','companyStatus'];
+    protected $guarded = [];
     protected $primaryKey = 'companyId';
     public $timestamps = false;
-    function Company(){
-        return $this->belongsTo(Company::class.'companyId');
-    }
     function Contact(){
         return $this->hasOne(Contact::class,'companyId');
     }

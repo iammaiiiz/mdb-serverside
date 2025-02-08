@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['productNameEnglish','productNameFrance','productDescriptionEnglish','productDescriptionFrance','GTIN','productBrandName','productCountryOfOrigin','productGross','productNet','productUnit','productImage','productStatus','companyId'];
+    protected $guarded = [];
     protected $primaryKey = 'GTIN';
     public $timestamps = false;
     function Company(){

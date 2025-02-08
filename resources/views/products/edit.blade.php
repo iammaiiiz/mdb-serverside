@@ -4,7 +4,7 @@
 @section('content')
     <nav>
         <section>
-            <a href="{{route('products.show',['GTIN'=>$product->GTIN])}}" class="sec">Back</a>
+            <a href="{{route('products.show',['GTIN'=>$product->GTIN])}}" class="dark">Back</a>
         </section>
 
         <section>

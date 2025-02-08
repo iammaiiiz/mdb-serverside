@@ -8,12 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Owner extends Model
 {
     use HasFactory;
-    protected $fillable = ['ownerName','ownerNumber','ownerEmail','companyId'];
+    protected $guarded = [];
     protected $primaryKey = 'ownerId';
     public $timestamps = false;
     function Company(){
-        function Company(){
-            return $this->belongsTo(Company::class,'companyId');
-        }
+        return $this->belongsTo(Company::class,'companyId');
     }
 }

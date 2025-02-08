@@ -4,7 +4,7 @@
 @section('content')
     <nav>
         <section>
-            <a href="{{route('products')}}" class="sec">Back</a>
+            <a href="{{route('products')}}" class="dark">Back</a>
         </section>
 
         <section>
@@ -36,9 +36,9 @@
         <label for="productCountryOfOrigin">Product Country Of Origin</label>
         <input type="text" id="productCountryOfOrigin" name="productCountryOfOrigin">
         <label for="productGross">Product Gross</label>
-        <input type="number" id="productGross" name="productGross">
+        <input type="number" step="0.01" id="productGross" name="productGross">
         <label for="productNet">Product Net</label>
-        <input type="number" id="productNet" name="productNet">
+        <input type="number" step="0.01" id="productNet" name="productNet">
         <label for="productUnit">Product Unit</label>
         <input type="text" id="productUnit" name="productUnit">
         <label for="productBrandName">Product Email</label>
